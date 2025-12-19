@@ -17,10 +17,11 @@
 
   <style>
     canvas {
-      max-width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+}
+
     .logo {
       height: 40px;
     }
@@ -72,27 +73,40 @@
 <script>
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+
+const FB_SIZE = 1080;
+canvas.width = FB_SIZE;
+canvas.height = FB_SIZE;
+
 const frameImg = new Image();
-frameImg.src = 'frame.png'; 
+frameImg.src = 'frame.png';
 
 frameImg.onload = () => {
-  const demoImg = new Image();
-  demoImg.src = 'frame.png'; 
-  demoImg.onload = () => {
-    drawCombined(demoImg);
-  };
+  drawCombined(frameImg); // initial preview
 };
 
 function drawCombined(userImg) {
-  const width = frameImg.width;
-  const height = frameImg.height;
+  ctx.clearRect(0, 0, FB_SIZE, FB_SIZE);
 
-  canvas.width = width;
-  canvas.height = height;
+  // Draw user image (cover-style crop)
+  const scale = Math.max(
+    FB_SIZE / userImg.width,
+    FB_SIZE / userImg.height
+  );
 
-  ctx.clearRect(0, 0, width, height);
-  ctx.drawImage(userImg, 0, 0, width, height);
-  ctx.drawImage(frameImg, 0, 0, width, height);
+  const x = (FB_SIZE - userImg.width * scale) / 2;
+  const y = (FB_SIZE - userImg.height * scale) / 2;
+
+  ctx.drawImage(
+    userImg,
+    x,
+    y,
+    userImg.width * scale,
+    userImg.height * scale
+  );
+
+  // Draw frame on top
+  ctx.drawImage(frameImg, 0, 0, FB_SIZE, FB_SIZE);
 }
 
 document.getElementById('upload').addEventListener('change', function(e) {
@@ -100,15 +114,13 @@ document.getElementById('upload').addEventListener('change', function(e) {
   if (!file) return;
 
   const userImg = new Image();
-  userImg.onload = () => {
-    drawCombined(userImg);
-  };
+  userImg.onload = () => drawCombined(userImg);
   userImg.src = URL.createObjectURL(file);
 });
 
 document.getElementById('downloadBtn').addEventListener('click', function() {
   const link = document.createElement('a');
-  link.download = 'bsu-profile-photo-frame.png';
+  link.download = 'bsu-facebook-profile.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
 });
@@ -117,3 +129,4 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
 </body>
         </html>
   
+
