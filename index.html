@@ -232,14 +232,14 @@ function drawBuiltInFrame() {
   ctx.lineWidth = 8;
   ctx.strokeRect(10, 10, canvasWidth - 20, canvasHeight - 20);
   
-  ctx.strokeStyle = '#FFD700';
+  ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 3;
   ctx.strokeRect(16, 16, canvasWidth - 32, canvasHeight - 32);
   
   // Top banner - elegant
   ctx.fillStyle = '#1e3a8a';
   ctx.fillRect(0, 0, canvasWidth, 65);
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#ffffff';
   ctx.font = `bold ${Math.floor(canvasWidth * 0.045)}px 'SolaimanLipi', sans-serif`;
   ctx.textAlign = "center";
   ctx.fillText("বাংলাদেশ ছাত্র ইউনিয়ন", canvasWidth/2, 42);
@@ -247,12 +247,12 @@ function drawBuiltInFrame() {
   // Bottom banner
   ctx.fillStyle = '#1e3a8a';
   ctx.fillRect(0, canvasHeight - 65, canvasWidth, 65);
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#ffffff';
   ctx.font = `${Math.floor(canvasWidth * 0.04)}px 'SolaimanLipi', sans-serif`;
   ctx.fillText("৭৪তম প্রতিষ্ঠাবার্ষিকী", canvasWidth/2, canvasHeight - 28);
   
   // Corner ornaments
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#ffffff';
   // Top-left
   ctx.beginPath();
   ctx.arc(35, 35, 18, 0, 2 * Math.PI);
@@ -262,7 +262,7 @@ function drawBuiltInFrame() {
   ctx.fillText("✪", 28, 43);
   
   // Top-right
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.arc(canvasWidth - 35, 35, 18, 0, 2 * Math.PI);
   ctx.fill();
@@ -270,7 +270,7 @@ function drawBuiltInFrame() {
   ctx.fillText("✪", canvasWidth - 42, 43);
   
   // Bottom-left
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.arc(35, canvasHeight - 35, 18, 0, 2 * Math.PI);
   ctx.fill();
@@ -278,7 +278,7 @@ function drawBuiltInFrame() {
   ctx.fillText("✪", 28, canvasHeight - 28);
   
   // Bottom-right
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.arc(canvasWidth - 35, canvasHeight - 35, 18, 0, 2 * Math.PI);
   ctx.fill();
