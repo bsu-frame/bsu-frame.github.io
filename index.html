@@ -83,6 +83,7 @@ canvas{
   border:2px solid #1e3a8a;
   cursor:grab;
   touch-action:none;
+  display:block;
 }
 canvas:active{
   cursor:grabbing;
@@ -204,7 +205,7 @@ button:hover{
   <p>ছবি আপলোড করুন</p>
 </div>
 
-<canvas id="canvas"></canvas>
+<canvas id="canvas" width="1080" height="1080"></canvas>
 
 <div class="zoom-container">
   <input type="range" id="zoom" min="0.3" max="3.5" step="0.01" value="1">
@@ -229,165 +230,405 @@ https://bsu-frame.github.io</div>
 </div>
 
 <script>
-const fileInput = document.getElementById('fileInput');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const zoom = document.getElementById('zoom');
-const downloadBtn = document.getElementById('download');
-const zoomPercent = document.getElementById('zoomPercent');
-const uploadArea = document.getElementById('uploadArea');
-const frameNote = document.getElementById('frameNote');
-const copyBtn = document.getElementById('copyBtn');
-const captionText = document.getElementById('captionText');
+(function() {
+  // DOM elements
+  const fileInput = document.getElementById('fileInput');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const zoomSlider = document.getElementById('zoom');
+  const downloadBtn = document.getElementById('download');
+  const zoomPercent = document.getElementById('zoomPercent');
+  const uploadArea = document.getElementById('uploadArea');
+  const frameNote = document.getElementById('frameNote');
+  const copyBtn = document.getElementById('copyBtn');
+  const captionText = document.getElementById('captionText');
 
-let userImg = null;
-let frameImg = new Image();
-let scale = 1;
-let offsetX = 0, offsetY = 0;
-let dragging = false;
-let dragStartX = 0, dragStartY = 0;
-let dragStartOffsetX = 0, dragStartOffsetY = 0;
+  // Image data
+  let userImg = null;
+  let frameImg = new Image();
+  let scale = 1;
+  let offsetX = 0, offsetY = 0;
+  let dragging = false;
+  let dragStartX = 0, dragStartY = 0;
+  let dragStartOffsetX = 0, dragStartOffsetY = 0;
 
-let externalFrameLoaded = false;
-let canvasWidth = 1080, canvasHeight = 1080;
+  let externalFrameLoaded = false;
+  let externalFrameError = false;
+  const canvasWidth = 1080;
+  const canvasHeight = 1080;
+  
+  // Ensure canvas dimensions are set properly
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  
+  // Track if image is fully loaded to avoid draw errors
+  let userImgReady = false;
 
-// COPY FUNCTIONALITY
-copyBtn.onclick = function() {
-  const text = captionText.innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    const originalText = copyBtn.innerText;
-    copyBtn.innerText = "✅ কপি হয়েছে!";
-    copyBtn.style.background = "#047857";
-    setTimeout(() => {
-      copyBtn.innerText = originalText;
-      copyBtn.style.background = "#059669";
-    }, 2000);
-  });
-};
+  // ------ COPY FUNCTIONALITY (fully working) ------
+  copyBtn.onclick = function(e) {
+    e.preventDefault();
+    const textToCopy = captionText.innerText;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = copyBtn.innerText;
+        copyBtn.innerText = "কপি হয়েছে!";
+        copyBtn.style.background = "#047857";
+        setTimeout(() => {
+          copyBtn.innerText = originalText;
+          copyBtn.style.background = "#1e3a8a";
+        }, 2000);
+      }).catch(err => {
+        console.warn('Clipboard error:', err);
+        fallbackCopyText(textToCopy);
+      });
+    } else {
+      fallbackCopyText(textToCopy);
+    }
+  };
+  
+  function fallbackCopyText(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.top = '-9999px';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        const originalText = copyBtn.innerText;
+        copyBtn.innerText = "কপি হয়েছে!";
+        copyBtn.style.background = "#047857";
+        setTimeout(() => {
+          copyBtn.innerText = originalText;
+          copyBtn.style.background = "#1e3a8a";
+        }, 2000);
+      } else {
+        alert("কপি করতে ব্যর্থ হয়েছে। ম্যানুয়ালি কপি করুন।");
+      }
+    } catch (err) {
+      alert("কপি সাপোর্ট নেই। ম্যানুয়ালি কপি করুন।");
+    }
+    document.body.removeChild(textarea);
+  }
 
-function drawBuiltInFrame() {
-  ctx.save();
-  ctx.strokeStyle = '#1e3a8a';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(10, 10, canvasWidth - 20, canvasHeight - 20);
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(16, 16, canvasWidth - 32, canvasHeight - 32);
-  ctx.fillStyle = '#1e3a8a';
-  ctx.fillRect(0, 0, canvasWidth, 65);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = `bold ${Math.floor(canvasWidth * 0.045)}px 'SolaimanLipi', sans-serif`;
-  ctx.textAlign = "center";
-  ctx.fillText("বাংলাদেশ ছাত্র ইউনিয়ন", canvasWidth/2, 42);
-  ctx.fillStyle = '#1e3a8a';
-  ctx.fillRect(0, canvasHeight - 65, canvasWidth, 65);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = `${Math.floor(canvasWidth * 0.04)}px 'SolaimanLipi', sans-serif`;
-  ctx.fillText("৭৪তম প্রতিষ্ঠাবার্ষিকী", canvasWidth/2, canvasHeight - 28);
-  ctx.restore();
-}
-
-function clampOffsets() {
-  if (!userImg) return;
-  const imgW = userImg.naturalWidth * scale;
-  const imgH = userImg.naturalHeight * scale;
-  let minX = canvasWidth - imgW, maxX = 0;
-  let minY = canvasHeight - imgH, maxY = 0;
-  if (imgW < canvasWidth) { minX = (canvasWidth - imgW) / 2 - 50; maxX = (canvasWidth - imgW) / 2 + 50; }
-  if (imgH < canvasHeight) { minY = (canvasHeight - imgH) / 2 - 50; maxY = (canvasHeight - imgH) / 2 + 50; }
-  offsetX = Math.min(maxX, Math.max(minX, offsetX));
-  offsetY = Math.min(maxY, Math.max(minY, offsetY));
-}
-
-function draw() {
-  if (!ctx) return;
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  if (userImg && userImg.complete) {
+  // ------ BUILT-IN FRAME DRAWING (fallback if external fails) ------
+  function drawBuiltInFrame() {
     ctx.save();
-    ctx.filter = "blur(18px)";
-    const bgScale = Math.max(canvasWidth / userImg.naturalWidth, canvasHeight / userImg.naturalHeight);
-    ctx.drawImage(userImg, (canvasWidth - userImg.naturalWidth*bgScale)/2, (canvasHeight - userImg.naturalHeight*bgScale)/2, userImg.naturalWidth*bgScale, userImg.naturalHeight*bgScale);
-    ctx.filter = "none";
-    ctx.drawImage(userImg, offsetX, offsetY, userImg.naturalWidth * scale, userImg.naturalHeight * scale);
+    // Outer border
+    ctx.strokeStyle = '#1e3a8a';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(10, 10, canvasWidth - 20, canvasHeight - 20);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(16, 16, canvasWidth - 32, canvasHeight - 32);
+    // Top header
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillRect(0, 0, canvasWidth, 65);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${Math.floor(canvasWidth * 0.045)}px 'SolaimanLipi', sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("বাংলাদেশ ছাত্র ইউনিয়ন", canvasWidth/2, 42);
+    // Bottom footer
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillRect(0, canvasHeight - 65, canvasWidth, 65);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `${Math.floor(canvasWidth * 0.04)}px 'SolaimanLipi', sans-serif`;
+    ctx.fillText("৭৪তম প্রতিষ্ঠাবার্ষিকী", canvasWidth/2, canvasHeight - 28);
     ctx.restore();
-  } else {
+  }
+
+  // ------ Clamping logic to keep photo inside canvas boundaries ------
+  function clampOffsets() {
+    if (!userImg || !userImgReady) return;
+    const imgW = userImg.naturalWidth * scale;
+    const imgH = userImg.naturalHeight * scale;
+    let minX = canvasWidth - imgW;
+    let maxX = 0;
+    let minY = canvasHeight - imgH;
+    let maxY = 0;
+    
+    if (imgW < canvasWidth) {
+      minX = (canvasWidth - imgW) / 2;
+      maxX = (canvasWidth - imgW) / 2;
+    } else {
+      minX = canvasWidth - imgW;
+      maxX = 0;
+    }
+    
+    if (imgH < canvasHeight) {
+      minY = (canvasHeight - imgH) / 2;
+      maxY = (canvasHeight - imgH) / 2;
+    } else {
+      minY = canvasHeight - imgH;
+      maxY = 0;
+    }
+    
+    offsetX = Math.min(maxX, Math.max(minX, offsetX));
+    offsetY = Math.min(maxY, Math.max(minY, offsetY));
+  }
+
+  // ------ MAIN DRAW FUNCTION (handles user image, blur background, frame) ------
+  function draw() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    
+    if (userImg && userImgReady && userImg.complete && userImg.naturalWidth > 0) {
+      ctx.save();
+      // Blurred background enlarged version
+      ctx.filter = "blur(18px)";
+      const bgScale = Math.max(canvasWidth / userImg.naturalWidth, canvasHeight / userImg.naturalHeight);
+      ctx.drawImage(userImg, (canvasWidth - userImg.naturalWidth * bgScale) / 2, (canvasHeight - userImg.naturalHeight * bgScale) / 2, userImg.naturalWidth * bgScale, userImg.naturalHeight * bgScale);
+      ctx.filter = "none";
+      // Main image with scale and offset
+      ctx.drawImage(userImg, offsetX, offsetY, userImg.naturalWidth * scale, userImg.naturalHeight * scale);
+      ctx.restore();
+    } else {
+      // Placeholder background
+      ctx.fillStyle = '#e5e7eb';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.fillStyle = '#6b7280';
+      ctx.font = `${Math.floor(canvasWidth/15)}px 'SolaimanLipi', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText("ছবি আপলোড করুন", canvasWidth/2, canvasHeight/2);
+    }
+    
+    // Draw frame overlay (external PNG if loaded and valid, else built-in)
+    if (externalFrameLoaded && frameImg.complete && frameImg.naturalWidth > 0 && !externalFrameError) {
+      try {
+        ctx.drawImage(frameImg, 0, 0, canvasWidth, canvasHeight);
+      } catch(e) {
+        drawBuiltInFrame();
+      }
+    } else {
+      drawBuiltInFrame();
+    }
+  }
+  
+  // Reset zoom and position after new image loads
+  function resetPositionAndScale() {
+    if (!userImg || !userImgReady || userImg.naturalWidth === 0) return;
+    const imgW = userImg.naturalWidth;
+    const imgH = userImg.naturalHeight;
+    scale = Math.max(canvasWidth / imgW, canvasHeight / imgH);
+    offsetX = (canvasWidth - imgW * scale) / 2;
+    offsetY = (canvasHeight - imgH * scale) / 2;
+    zoomSlider.value = scale;
+    zoomPercent.innerText = Math.round(scale * 100) + '%';
+    clampOffsets();
+    draw();
+  }
+
+  // ------ FRAME LOAD (external frame74.png with error handling) ------
+  frameImg.onload = function() {
+    if (frameImg.complete && frameImg.naturalWidth > 0) {
+      externalFrameLoaded = true;
+      externalFrameError = false;
+      if(frameNote) frameNote.classList.add('show');
+      draw();
+    } else {
+      externalFrameLoaded = false;
+      externalFrameError = true;
+      if(frameNote) frameNote.classList.remove('show');
+      draw();
+    }
+  };
+  
+  frameImg.onerror = function() {
+    externalFrameLoaded = false;
+    externalFrameError = true;
+    if(frameNote) frameNote.classList.remove('show');
+    draw();
+  };
+  
+  frameImg.src = "frame74.png";
+  
+  // ------ IMAGE UPLOAD HANDLER (fixed loading state) ------
+  fileInput.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = new Image();
+      img.onload = function() {
+        userImg = img;
+        userImgReady = true;
+        resetPositionAndScale();
+      };
+      img.onerror = function() {
+        alert('ছবি লোড করতে সমস্যা হয়েছে। অন্য ছবি নির্বাচন করুন।');
+        userImg = null;
+        userImgReady = false;
+        draw();
+      };
+      img.src = ev.target.result;
+    };
+    reader.onerror = function() {
+      alert('ফাইল পড়া যায়নি।');
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  // Trigger upload on click
+  uploadArea.onclick = function() {
+    fileInput.click();
+  };
+  
+  // ------ ZOOM SLIDER (fully working with proper scaling) ------
+  zoomSlider.oninput = function() {
+    if (!userImg || !userImgReady) return;
+    const oldScale = scale;
+    let newScale = parseFloat(zoomSlider.value);
+    if (isNaN(newScale)) newScale = 1;
+    scale = newScale;
+    // Adjust offset to keep image centered relative to zoom
+    const imgW = userImg.naturalWidth;
+    const imgH = userImg.naturalHeight;
+    const oldCenterX = offsetX + (imgW * oldScale) / 2;
+    const oldCenterY = offsetY + (imgH * oldScale) / 2;
+    offsetX = oldCenterX - (imgW * scale) / 2;
+    offsetY = oldCenterY - (imgH * scale) / 2;
+    zoomPercent.innerText = Math.round(scale * 100) + '%';
+    clampOffsets();
+    draw();
+  };
+  
+  // ------ DRAG TO PAN (touch and mouse with accurate coordinate mapping) ------
+  function getCanvasCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    let clientX, clientY;
+    if (e.touches) {
+      if (e.touches.length === 0) return { x: 0, y: 0 };
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    let x = (clientX - rect.left) * scaleX;
+    let y = (clientY - rect.top) * scaleY;
+    x = Math.min(Math.max(0, x), canvas.width);
+    y = Math.min(Math.max(0, y), canvas.height);
+    return { x, y };
+  }
+  
+  function startDrag(e) {
+    if (!userImg || !userImgReady) return;
+    e.preventDefault();
+    dragging = true;
+    const coords = getCanvasCoords(e);
+    dragStartX = coords.x;
+    dragStartY = coords.y;
+    dragStartOffsetX = offsetX;
+    dragStartOffsetY = offsetY;
+  }
+  
+  function onDrag(e) {
+    if (!dragging || !userImg || !userImgReady) return;
+    e.preventDefault();
+    const coords = getCanvasCoords(e);
+    const deltaX = coords.x - dragStartX;
+    const deltaY = coords.y - dragStartY;
+    offsetX = dragStartOffsetX + deltaX;
+    offsetY = dragStartOffsetY + deltaY;
+    clampOffsets();
+    draw();
+  }
+  
+  function stopDrag(e) {
+    dragging = false;
+  }
+  
+  // Mouse events
+  canvas.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', onDrag);
+  window.addEventListener('mouseup', stopDrag);
+  
+  // Touch events with proper handling to prevent scrolling while dragging
+  canvas.addEventListener('touchstart', startDrag, { passive: false });
+  window.addEventListener('touchmove', onDrag, { passive: false });
+  window.addEventListener('touchend', stopDrag);
+  window.addEventListener('touchcancel', stopDrag);
+  
+  // Prevent context menu on canvas to avoid interference
+  canvas.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  });
+  
+  // ------ DOWNLOAD (ensure high quality) ------
+  downloadBtn.onclick = function() {
+    try {
+      const link = document.createElement('a');
+      link.download = 'BSU-74th-Frame.png';
+      const dataURL = canvas.toDataURL('image/png');
+      link.href = dataURL;
+      link.click();
+    } catch(e) {
+      alert('ডাউনলোড করতে সমস্যা হয়েছে।');
+    }
+  };
+  
+  // ------ Initial draw (without user image) ------
+  function initialDraw() {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = '#e5e7eb';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = '#6b7280';
-    ctx.font = `${Math.floor(canvasWidth/15)}px 'SolaimanLipi'`;
+    ctx.font = `${Math.floor(canvasWidth/15)}px 'SolaimanLipi', sans-serif`;
     ctx.textAlign = "center";
     ctx.fillText("ছবি আপলোড করুন", canvasWidth/2, canvasHeight/2);
+    if (externalFrameLoaded && frameImg.complete && frameImg.naturalWidth > 0) {
+      ctx.drawImage(frameImg, 0, 0, canvasWidth, canvasHeight);
+    } else {
+      drawBuiltInFrame();
+    }
   }
-  if (externalFrameLoaded) ctx.drawImage(frameImg, 0, 0, canvasWidth, canvasHeight);
-  else drawBuiltInFrame();
-}
-
-function resetPositionAndScale() {
-  if (!userImg) return;
-  scale = Math.max(canvasWidth/userImg.naturalWidth, canvasHeight/userImg.naturalHeight);
-  offsetX = (canvasWidth - userImg.naturalWidth * scale) / 2;
-  offsetY = (canvasHeight - userImg.naturalHeight * scale) / 2;
-  zoom.value = scale;
-  zoomPercent.innerText = Math.round(scale * 100) + '%';
-  draw();
-}
-
-frameImg.onload = () => { externalFrameLoaded = true; draw(); };
-frameImg.onerror = () => { externalFrameLoaded = false; draw(); };
-frameImg.src = "frame74.png";
-
-canvas.width = 1080; canvas.height = 1080;
-
-fileInput.onchange = (e) => {
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    userImg = new Image();
-    userImg.onload = resetPositionAndScale;
-    userImg.src = ev.target.result;
-  };
-  reader.readAsDataURL(e.target.files[0]);
-};
-uploadArea.onclick = () => fileInput.click();
-zoom.oninput = () => {
-  const oldScale = scale;
-  scale = parseFloat(zoom.value);
-  offsetX -= (userImg.naturalWidth * scale - userImg.naturalWidth * oldScale) / 2;
-  offsetY -= (userImg.naturalHeight * scale - userImg.naturalHeight * oldScale) / 2;
-  zoomPercent.innerText = Math.round(scale * 100) + '%';
-  clampOffsets();
-  draw();
-};
-
-function getCanvasCoords(e) {
-  const rect = canvas.getBoundingClientRect();
-  const ex = e.touches ? e.touches[0].clientX : e.clientX;
-  const ey = e.touches ? e.touches[0].clientY : e.clientY;
-  return { x: (ex - rect.left) * (canvas.width/rect.width), y: (ey - rect.top) * (canvas.height/rect.height) };
-}
-canvas.onmousedown = canvas.ontouchstart = (e) => {
-  if (!userImg) return;
-  dragging = true;
-  const {x, y} = getCanvasCoords(e);
-  dragStartX = x; dragStartY = y;
-  dragStartOffsetX = offsetX; dragStartOffsetY = offsetY;
-};
-window.onmousemove = window.ontouchmove = (e) => {
-  if (!dragging) return;
-  const {x, y} = getCanvasCoords(e);
-  offsetX = dragStartOffsetX + (x - dragStartX);
-  offsetY = dragStartOffsetY + (y - dragStartY);
-  clampOffsets();
-  draw();
-};
-window.onmouseup = window.ontouchend = () => dragging = false;
-
-downloadBtn.onclick = () => {
-  const link = document.createElement('a');
-  link.download = 'BSU-74th-Frame.png';
-  link.href = canvas.toDataURL();
-  link.click();
-};
-draw();
+  
+  // Wait until frame loads or error occurs before initial draw
+  if (frameImg.complete) {
+    if (frameImg.naturalWidth > 0) {
+      externalFrameLoaded = true;
+      if(frameNote) frameNote.classList.add('show');
+    } else {
+      externalFrameLoaded = false;
+      if(frameNote) frameNote.classList.remove('show');
+    }
+    initialDraw();
+  } else {
+    frameImg.onload = function() {
+      externalFrameLoaded = true;
+      if(frameNote) frameNote.classList.add('show');
+      initialDraw();
+    };
+    frameImg.onerror = function() {
+      externalFrameLoaded = false;
+      if(frameNote) frameNote.classList.remove('show');
+      initialDraw();
+    };
+  }
+  
+  // Ensure frameNote is not visible by default unless frame loads successfully
+  setTimeout(function() {
+    if (!externalFrameLoaded && !externalFrameError) {
+      initialDraw();
+    }
+  }, 500);
+  
+  // Additional guard: if user image loaded but canvas not updated, trigger redraw on window resize
+  window.addEventListener('resize', function() {
+    if (userImg && userImgReady) {
+      draw();
+    } else {
+      initialDraw();
+    }
+  });
+})();
 </script>
 </body>
 </html>
