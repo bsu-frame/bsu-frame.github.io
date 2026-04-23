@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>বাংলাদেশ ছাত্র ইউনিয়নের ৭৪তম প্রতিষ্ঠাবার্ষিকী </title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="logo.png">
+
+<style>
+
+/* ==== FONT ==== */
+@font-face {
+  font-family: 'SolaimanLipi';
+  src: url('SolaimanLipi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ==== BODY ==== */
+body{
+  font-family:'SolaimanLipi', sans-serif;
+  background:#f5f7fa;
+  margin:0;
+  color:#000;
+}
+
+/* ==== NAVBAR ==== */
+.navbar{
+  height:64px;
+  background:#1e3a8a;
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* container inside navbar */
+.navbar .inner{
+  max-width:420px;
+  width:100%;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+}
+
+/* logo */
+.navbar img{
+  height:42px;
+  width:auto;
+  filter:brightness(0) invert(1); /* makes black/blue SVG white */
+}
+
+/* ==== MAIN LAYOUT ==== */
+.container{
+  max-width:420px;
+  width:100%;
+  margin:20px auto;
+  padding:0 12px;
+}
+
+/* ==== UPLOAD ==== */
+.upload{
+  border:2px dashed #1e3a8a;
+  padding:20px;
+  text-align:center;
+  border-radius:10px;
+  margin-bottom:10px;
+  cursor:pointer;
+  background:#fff;
+  color:#1e3a8a;
+  font-size:16px;
+}
+
+/* ==== CANVAS ==== */
+canvas{
+  width:100%;
+  border-radius:10px;
+  background:#e5e7eb;
+  border:2px solid #1e3a8a;
+}
+
+/* ==== ZOOM ==== */
+input[type="range"]{
+  width:100%;
+  margin:12px 0;
+  accent-color:#1e3a8a;
+}
+
+/* ==== BUTTON ==== */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  background:#1e3a8a;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'SolaimanLipi', sans-serif;
+  font-size:16px;
+  font-weight:bold;
+}
+
+button:hover{
+  background:#162f6b;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar">
+  <div class="inner">
+    <img src="bsu-logo.png" alt="Logo">
+  </div>
+</header>
+
+<!-- ===== APP ===== -->
+<div class="container">
+
+<div class="upload">
+  <input type="file" id="fileInput" accept="image/*">
+  <p>ছবি আপলোড করুন</p>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<input type="range" id="zoom" min="0.2" max="3" step="0.01" value="1">
+
+<button id="download">ডাউনলোড করুন</button>
+
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const zoom = document.getElementById('zoom');
+const downloadBtn = document.getElementById('download');
+
+let userImg=null, frameImg=new Image();
+let scale=1, x=0, y=0, dragging=false, startX, startY;
+
+/* LOAD FRAME */
+frameImg.onload=()=>{
+  canvas.width = frameImg.naturalWidth || 1080;
+  canvas.height = frameImg.naturalHeight || 1080;
+  draw();
+};
+frameImg.src="frame74.png";
+
+/* DRAW */
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(userImg){
+    const w = userImg.naturalWidth*scale;
+    const h = userImg.naturalHeight*scale;
+
+    ctx.filter="blur(20px)";
+    ctx.drawImage(userImg,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
+    ctx.filter="none";
+
+    ctx.drawImage(userImg,x,y,w,h);
+  }
+
+  ctx.drawImage(frameImg,0,0,canvas.width,canvas.height);
+}
+
+/* FILE */
+fileInput.onchange=e=>{
+  const file=e.target.files[0];
+  if(!file) return;
+
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      userImg=img;
+
+      const sx=canvas.width/img.width;
+      const sy=canvas.height/img.height;
+      scale=Math.max(sx,sy);
+
+      x=(canvas.width-img.width*scale)/2;
+      y=(canvas.height-img.height*scale)/2;
+
+      zoom.value=scale;
+      draw();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+/* ZOOM */
+zoom.oninput=()=>{
+  scale=parseFloat(zoom.value);
+  draw();
+};
+
+/* DRAG */
+canvas.onmousedown=e=>{
+  dragging=true;
+  startX=e.offsetX-x;
+  startY=e.offsetY-y;
+};
+
+window.onmousemove=e=>{
+  if(!dragging) return;
+  x=e.offsetX-startX;
+  y=e.offsetY-startY;
+  draw();
+};
+
+window.onmouseup=()=>dragging=false;
+
+/* DOWNLOAD */
+downloadBtn.onclick=()=>{
+  const a=document.createElement('a');
+  a.href=canvas.toDataURL("image/png");
+  a.download="frame74.png";
+  a.click();
+};
+</script>
+
+</body>
+</html>
