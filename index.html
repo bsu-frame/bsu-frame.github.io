@@ -361,7 +361,10 @@ function draw() {
     ctx.fillStyle = '#6b7280';
     ctx.font = `18px 'SolaimanLipi', sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText("ছবি আপলোড করুন", canvasWidth/2, canvasHeight/2);
+    // Text size adapts to screen size
+   const textSize = Math.floor(canvasWidth / 15);  // For 1080px canvas = 72px
+   ctx.font = `${textSize}px 'SolaimanLipi', sans-serif`;
+   ctx.fillText("ছবি আপলোড করুন", canvasWidth/2, canvasHeight/2 - 15);
   }
   
   // Draw frame (external if loaded, otherwise beautiful built-in)
