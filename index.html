@@ -3,38 +3,19 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-<title>বাংলাদেশ ছাত্র ইউনিয়নের ৭৪তম প্রতিষ্ঠাবার্ষিকী</title> 
+<title>বাংলাদেশ ছাত্র ইউনিয়নের ৭৪তম প্রতিষ্ঠাবার্ষিকী</title>
 
-<!-- ========== SOCIAL SHARE META TAGS (Featured Image) ========== -->
-<!-- Facebook / WhatsApp / LinkedIn / Telegram -->
+<!-- ========== SOCIAL SHARE META TAGS ========== -->
 <meta property="og:title" content="বাংলাদেশ ছাত্র ইউনিয়নের ৭৪তম প্রতিষ্ঠাবার্ষিকী">
 <meta property="og:description" content="আপনার ছবি সুন্দর ফ্রেমে সাজিয়ে শেয়ার করুন। বাংলাদেশ ছাত্র ইউনিয়নের ৭৪তম প্রতিষ্ঠাবার্ষিকী উপলক্ষে বিশেষ ফ্রেম।">
 <meta property="og:image" content="https://bsu-frame.github.io/featured-image.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="বাংলাদেশ ছাত্র ইউনিয়ন ৭৪তম প্রতিষ্ঠাবার্ষিকী ফ্রেম">
 <meta property="og:url" content="https://bsu-frame.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="bn_BD">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="বাংলাদেশ ছাত্র ইউনিয়নের ৭৪তম প্রতিষ্ঠাবার্ষিকী">
-<meta name="twitter:description" content="আপনার ছবি সুন্দর ফ্রেমে সাজিয়ে শেয়ার করুন।">
-<meta name="twitter:image" content="https://bsu-frame.github.io/featured-image.jpg">
-
-<!-- WhatsApp/Telegram also use OG tags -->
-<meta property="og:site_name" content="বাংলাদেশ ছাত্র ইউনিয়ন">
-
-<!-- Fallback image if OG image fails -->
-<link rel="image_src" href="https://bsu-frame.github.io/featured-image.jpg">
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="logo.png">
 
-
 <style>
-
 /* ==== FONT ==== */
 @font-face {
   font-family: 'SolaimanLipi';
@@ -62,11 +43,10 @@ body{
   box-shadow:0 2px 10px rgba(0,0,0,0.2);
 }
 
-
 .navbar img{
   height:42px;
   width:auto;
-  filter:brightness(0) invert(1); /* makes black/blue SVG white */
+  filter:brightness(0) invert(1);
   display:block;
 }
 
@@ -135,7 +115,7 @@ input[type="range"]{
   border-radius:20px;
 }
 
-/* ==== BUTTON ==== */
+/* ==== BUTTONS ==== */
 button{
   width:100%;
   padding:12px;
@@ -154,7 +134,45 @@ button:hover{
   background:#162f6b;
 }
 
-/* frame missing note */
+/* ==== CAPTION BOX ==== */
+.caption-box {
+  margin-top: 25px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.caption-title {
+  font-weight: bold;
+  color: #1e3a8a;
+  margin-bottom: 10px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.caption-text {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid #f1f5f9;
+  white-space: pre-line;
+  margin-bottom: 12px;
+  color: #1e293b;
+}
+.copy-btn {
+  background: #059669;
+  margin-top: 0;
+  padding: 10px;
+  font-size: 14px;
+}
+.copy-btn:hover {
+  background: #047857;
+}
+
 .frame-note{
   font-size:11px;
   text-align:center;
@@ -168,24 +186,21 @@ button:hover{
 .frame-note.show{
   display:block;
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- ===== NAVBAR ===== -->
 <header class="navbar">
   <div class="inner">
     <img src="bsu-logo.png" alt="Logo">
   </div>
 </header>
 
-<!-- ===== APP ===== -->
 <div class="container">
 
 <div class="upload" id="uploadArea">
-  <input type="file" id="fileInput" accept="image/*">
+  <input type="file" id="fileInput" accept="image/*" style="display:none;">
   <p>ছবি আপলোড করুন</p>
 </div>
 
@@ -197,7 +212,19 @@ button:hover{
 </div>
 
 <button id="download">ডাউনলোড করুন</button>
-<div class="frame-note" id="frameNote">frame74.png not found, but built-in frames are working</div>
+
+<!-- COPYABLE SECTION -->
+<div class="caption-box">
+  <div class="caption-title">📌 পোস্টের জন্য নমুনা ক্যাপশন:</div>
+  <div class="caption-text" id="captionText">"ইতিহাসের পথ বেয়ে, মোদের মিছিল চলুক
+অমঙ্গলকে বিনাশ করে, ভাঙবো মগের মুলুক"
+
+নিজের ছবি দিয়ে ফ্রেম তৈরি করুন:
+https://bsu-frame.github.io</div>
+  <button class="copy-btn" id="copyBtn">ক্যাপশন কপি করুন</button>
+</div>
+
+<div class="frame-note" id="frameNote">frame74.png found, built-in layout active as base.</div>
 
 </div>
 
@@ -210,408 +237,157 @@ const downloadBtn = document.getElementById('download');
 const zoomPercent = document.getElementById('zoomPercent');
 const uploadArea = document.getElementById('uploadArea');
 const frameNote = document.getElementById('frameNote');
+const copyBtn = document.getElementById('copyBtn');
+const captionText = document.getElementById('captionText');
 
 let userImg = null;
 let frameImg = new Image();
 let scale = 1;
-let offsetX = 0, offsetY = 0;  // renamed from x,y for clarity
+let offsetX = 0, offsetY = 0;
 let dragging = false;
 let dragStartX = 0, dragStartY = 0;
 let dragStartOffsetX = 0, dragStartOffsetY = 0;
 
-// Flag to track if external frame loaded successfully
 let externalFrameLoaded = false;
 let canvasWidth = 1080, canvasHeight = 1080;
 
-// ========== BUILT-IN BEAUTIFUL FRAME ==========
+// COPY FUNCTIONALITY
+copyBtn.onclick = function() {
+  const text = captionText.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const originalText = copyBtn.innerText;
+    copyBtn.innerText = "✅ কপি হয়েছে!";
+    copyBtn.style.background = "#047857";
+    setTimeout(() => {
+      copyBtn.innerText = originalText;
+      copyBtn.style.background = "#059669";
+    }, 2000);
+  });
+};
+
 function drawBuiltInFrame() {
   ctx.save();
-  
-  // Outer decorative border - matching #1e3a8a theme
   ctx.strokeStyle = '#1e3a8a';
   ctx.lineWidth = 8;
   ctx.strokeRect(10, 10, canvasWidth - 20, canvasHeight - 20);
-  
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 3;
   ctx.strokeRect(16, 16, canvasWidth - 32, canvasHeight - 32);
-  
-  // Top banner - elegant
   ctx.fillStyle = '#1e3a8a';
   ctx.fillRect(0, 0, canvasWidth, 65);
   ctx.fillStyle = '#ffffff';
   ctx.font = `bold ${Math.floor(canvasWidth * 0.045)}px 'SolaimanLipi', sans-serif`;
   ctx.textAlign = "center";
   ctx.fillText("বাংলাদেশ ছাত্র ইউনিয়ন", canvasWidth/2, 42);
-  
-  // Bottom banner
   ctx.fillStyle = '#1e3a8a';
   ctx.fillRect(0, canvasHeight - 65, canvasWidth, 65);
   ctx.fillStyle = '#ffffff';
   ctx.font = `${Math.floor(canvasWidth * 0.04)}px 'SolaimanLipi', sans-serif`;
   ctx.fillText("৭৪তম প্রতিষ্ঠাবার্ষিকী", canvasWidth/2, canvasHeight - 28);
-  
-  // Corner ornaments
-  ctx.fillStyle = '#ffffff';
-  // Top-left
-  ctx.beginPath();
-  ctx.arc(35, 35, 18, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.fillStyle = '#1e3a8a';
-  ctx.font = "bold 22px 'SolaimanLipi'";
-  ctx.fillText("✪", 28, 43);
-  
-  // Top-right
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.arc(canvasWidth - 35, 35, 18, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.fillStyle = '#1e3a8a';
-  ctx.fillText("✪", canvasWidth - 42, 43);
-  
-  // Bottom-left
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.arc(35, canvasHeight - 35, 18, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.fillStyle = '#1e3a8a';
-  ctx.fillText("✪", 28, canvasHeight - 28);
-  
-  // Bottom-right
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.arc(canvasWidth - 35, canvasHeight - 35, 18, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.fillStyle = '#1e3a8a';
-  ctx.fillText("✪", canvasWidth - 42, canvasHeight - 28);
-  
-  // Side accents
-  ctx.fillStyle = '#1e3a8a';
-  ctx.fillRect(0, 70, 6, canvasHeight - 140);
-  ctx.fillStyle = '#006400';
-  ctx.fillRect(canvasWidth - 6, 70, 6, canvasHeight - 140);
-  
   ctx.restore();
 }
 
-// ========== CLAMP OFFSETS to keep image within reasonable bounds ==========
 function clampOffsets() {
   if (!userImg) return;
-  
   const imgW = userImg.naturalWidth * scale;
   const imgH = userImg.naturalHeight * scale;
-  
-  // Allow some overflow but ensure image doesn't completely go out of frame
-  let minX = canvasWidth - imgW - 50;
-  let maxX = 50;
-  let minY = canvasHeight - imgH - 50;
-  let maxY = 50;
-  
-  // If image is smaller than canvas, give more panning freedom but keep visible
-  if (imgW < canvasWidth) {
-    minX = (canvasWidth - imgW) / 2 - 80;
-    maxX = (canvasWidth - imgW) / 2 + 80;
-  }
-  if (imgH < canvasHeight) {
-    minY = (canvasHeight - imgH) / 2 - 80;
-    maxY = (canvasHeight - imgH) / 2 + 80;
-  }
-  
-  // For larger images, clamp more strictly
-  if (imgW > canvasWidth) {
-    minX = canvasWidth - imgW;
-    maxX = 0;
-  }
-  if (imgH > canvasHeight) {
-    minY = canvasHeight - imgH;
-    maxY = 0;
-  }
-  
+  let minX = canvasWidth - imgW, maxX = 0;
+  let minY = canvasHeight - imgH, maxY = 0;
+  if (imgW < canvasWidth) { minX = (canvasWidth - imgW) / 2 - 50; maxX = (canvasWidth - imgW) / 2 + 50; }
+  if (imgH < canvasHeight) { minY = (canvasHeight - imgH) / 2 - 50; maxY = (canvasHeight - imgH) / 2 + 50; }
   offsetX = Math.min(maxX, Math.max(minX, offsetX));
   offsetY = Math.min(maxY, Math.max(minY, offsetY));
 }
 
-// ========== MAIN DRAW FUNCTION (fixed zoom & position) ==========
 function draw() {
   if (!ctx) return;
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  
-  if (userImg && userImg.complete && userImg.naturalWidth > 0) {
-    const w = userImg.naturalWidth * scale;
-    const h = userImg.naturalHeight * scale;
-    
-    // Draw blurred background (fill empty areas with blurred photo)
+  if (userImg && userImg.complete) {
     ctx.save();
     ctx.filter = "blur(18px)";
     const bgScale = Math.max(canvasWidth / userImg.naturalWidth, canvasHeight / userImg.naturalHeight);
-    const bgW = userImg.naturalWidth * bgScale;
-    const bgH = userImg.naturalHeight * bgScale;
-    const bgX = (canvasWidth - bgW) / 2;
-    const bgY = (canvasHeight - bgH) / 2;
-    ctx.drawImage(userImg, bgX, bgY, bgW, bgH);
+    ctx.drawImage(userImg, (canvasWidth - userImg.naturalWidth*bgScale)/2, (canvasHeight - userImg.naturalHeight*bgScale)/2, userImg.naturalWidth*bgScale, userImg.naturalHeight*bgScale);
     ctx.filter = "none";
-    
-    // Draw main image with current scale and position (draggable)
-    ctx.drawImage(userImg, offsetX, offsetY, w, h);
+    ctx.drawImage(userImg, offsetX, offsetY, userImg.naturalWidth * scale, userImg.naturalHeight * scale);
     ctx.restore();
-  } else if (!userImg) {
-    // Placeholder when no image
+  } else {
     ctx.fillStyle = '#e5e7eb';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = '#6b7280';
-    ctx.font = `18px 'SolaimanLipi', sans-serif`;
+    ctx.font = `${Math.floor(canvasWidth/15)}px 'SolaimanLipi'`;
     ctx.textAlign = "center";
-    // Text size adapts to screen size
-   const textSize = Math.floor(canvasWidth / 15);  // For 1080px canvas = 72px
-   ctx.font = `${textSize}px 'SolaimanLipi', sans-serif`;
-   ctx.fillText("ছবি আপলোড করুন", canvasWidth/2, canvasHeight/2 - 15);
+    ctx.fillText("ছবি আপলোড করুন", canvasWidth/2, canvasHeight/2);
   }
-  
-  // Draw frame (external if loaded, otherwise beautiful built-in)
-  if (externalFrameLoaded && frameImg.complete && frameImg.naturalWidth > 0) {
-    ctx.drawImage(frameImg, 0, 0, canvasWidth, canvasHeight);
-  } else {
-    drawBuiltInFrame();
-  }
+  if (externalFrameLoaded) ctx.drawImage(frameImg, 0, 0, canvasWidth, canvasHeight);
+  else drawBuiltInFrame();
 }
 
-// ========== RESET POSITION when new image loads ==========
 function resetPositionAndScale() {
   if (!userImg) return;
-  
-  const imgW_natural = userImg.naturalWidth;
-  const imgH_natural = userImg.naturalHeight;
-  
-  // Calculate initial scale: fit nicely inside frame (cover style but not too zoomed)
-  let fitScaleX = canvasWidth / imgW_natural;
-  let fitScaleY = canvasHeight / imgH_natural;
-  let initialScale = Math.min(fitScaleX, fitScaleY);
-  // Make it slightly larger than fit for better aesthetics (between 0.9x to 1.2x)
-  initialScale = Math.max(0.8, Math.min(1.2, initialScale));
-  // But if image is much smaller, fit properly
-  if (initialScale < 0.8) initialScale = fitScaleX < fitScaleY ? fitScaleX : fitScaleY;
-  
-  scale = initialScale;
-  const newW = imgW_natural * scale;
-  const newH = imgH_natural * scale;
-  
-  // Center the image
-  offsetX = (canvasWidth - newW) / 2;
-  offsetY = (canvasHeight - newH) / 2;
-  
-  clampOffsets();
+  scale = Math.max(canvasWidth/userImg.naturalWidth, canvasHeight/userImg.naturalHeight);
+  offsetX = (canvasWidth - userImg.naturalWidth * scale) / 2;
+  offsetY = (canvasHeight - userImg.naturalHeight * scale) / 2;
   zoom.value = scale;
   zoomPercent.innerText = Math.round(scale * 100) + '%';
   draw();
 }
 
-// ========== ZOOM FUNCTION (preserves center point, now works perfectly) ==========
-function updateZoom(newScale) {
-  if (!userImg) {
-    scale = newScale;
-    zoom.value = scale;
-    zoomPercent.innerText = Math.round(scale * 100) + '%';
-    draw();
-    return;
-  }
-  
-  const oldScale = scale;
-  const oldW = userImg.naturalWidth * oldScale;
-  const oldH = userImg.naturalHeight * oldScale;
-  
-  // Current center point of visible image area
-  const centerX = offsetX + oldW / 2;
-  const centerY = offsetY + oldH / 2;
-  
-  // Apply new scale with limits
-  scale = Math.min(3.5, Math.max(0.3, newScale));
-  
-  const newW = userImg.naturalWidth * scale;
-  const newH = userImg.naturalHeight * scale;
-  
-  // Adjust offset to keep same center point
-  offsetX = centerX - newW / 2;
-  offsetY = centerY - newH / 2;
-  
-  clampOffsets();
-  zoom.value = scale;
-  zoomPercent.innerText = Math.round(scale * 100) + '%';
-  draw();
-}
-
-// ========== LOAD EXTERNAL FRAME with fallback ==========
-frameImg.onload = function() {
-  externalFrameLoaded = true;
-  canvasWidth = frameImg.naturalWidth;
-  canvasHeight = frameImg.naturalHeight;
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-  frameNote.classList.remove('show');
-  if (userImg) {
-    resetPositionAndScale();
-  } else {
-    draw();
-  }
-};
-
-frameImg.onerror = function() {
-  // External frame not found - use built-in frame
-  console.log("frame74.png not found, using built-in frame");
-  externalFrameLoaded = false;
-  canvasWidth = 1080;
-  canvasHeight = 1080;
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-  frameNote.classList.add('show');
-  if (userImg) {
-    resetPositionAndScale();
-  } else {
-    draw();
-  }
-};
-
-// Start loading frame (external file)
+frameImg.onload = () => { externalFrameLoaded = true; draw(); };
+frameImg.onerror = () => { externalFrameLoaded = false; draw(); };
 frameImg.src = "frame74.png";
 
-// Set initial canvas size (will be updated when frame loads or fallback)
-canvas.width = 1080;
-canvas.height = 1080;
-canvasWidth = 1080;
-canvasHeight = 1080;
+canvas.width = 1080; canvas.height = 1080;
 
-// ========== FILE UPLOAD HANDLER ==========
-fileInput.onchange = function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  
+fileInput.onchange = (e) => {
   const reader = new FileReader();
-  reader.onload = function(ev) {
-    const img = new Image();
-    img.onload = function() {
-      userImg = img;
-      resetPositionAndScale();
-    };
-    img.src = ev.target.result;
+  reader.onload = (ev) => {
+    userImg = new Image();
+    userImg.onload = resetPositionAndScale;
+    userImg.src = ev.target.result;
   };
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(e.target.files[0]);
+};
+uploadArea.onclick = () => fileInput.click();
+zoom.oninput = () => {
+  const oldScale = scale;
+  scale = parseFloat(zoom.value);
+  offsetX -= (userImg.naturalWidth * scale - userImg.naturalWidth * oldScale) / 2;
+  offsetY -= (userImg.naturalHeight * scale - userImg.naturalHeight * oldScale) / 2;
+  zoomPercent.innerText = Math.round(scale * 100) + '%';
+  clampOffsets();
+  draw();
 };
 
-// Click on upload area
-uploadArea.onclick = function() {
-  fileInput.click();
-};
-
-// ========== ZOOM SLIDER ==========
-zoom.oninput = function() {
-  updateZoom(parseFloat(zoom.value));
-};
-
-// ========== DRAG / PAN (fixed coordinates) ==========
 function getCanvasCoords(e) {
   const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  
-  let clientX, clientY;
-  if (e.touches) {
-    clientX = e.touches[0].clientX;
-    clientY = e.touches[0].clientY;
-  } else {
-    clientX = e.clientX;
-    clientY = e.clientY;
-  }
-  
-  let canvasX = (clientX - rect.left) * scaleX;
-  let canvasY = (clientY - rect.top) * scaleY;
-  
-  // Clamp to canvas boundaries
-  canvasX = Math.min(Math.max(0, canvasX), canvas.width);
-  canvasY = Math.min(Math.max(0, canvasY), canvas.height);
-  
-  return { canvasX, canvasY };
+  const ex = e.touches ? e.touches[0].clientX : e.clientX;
+  const ey = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x: (ex - rect.left) * (canvas.width/rect.width), y: (ey - rect.top) * (canvas.height/rect.height) };
 }
-
-canvas.onmousedown = function(e) {
+canvas.onmousedown = canvas.ontouchstart = (e) => {
   if (!userImg) return;
-  e.preventDefault();
   dragging = true;
-  const { canvasX, canvasY } = getCanvasCoords(e);
-  dragStartX = canvasX;
-  dragStartY = canvasY;
-  dragStartOffsetX = offsetX;
-  dragStartOffsetY = offsetY;
-  canvas.style.cursor = 'grabbing';
+  const {x, y} = getCanvasCoords(e);
+  dragStartX = x; dragStartY = y;
+  dragStartOffsetX = offsetX; dragStartOffsetY = offsetY;
 };
-
-window.onmousemove = function(e) {
-  if (!dragging || !userImg) return;
-  e.preventDefault();
-  const { canvasX, canvasY } = getCanvasCoords(e);
-  const dx = canvasX - dragStartX;
-  const dy = canvasY - dragStartY;
-  offsetX = dragStartOffsetX + dx;
-  offsetY = dragStartOffsetY + dy;
+window.onmousemove = window.ontouchmove = (e) => {
+  if (!dragging) return;
+  const {x, y} = getCanvasCoords(e);
+  offsetX = dragStartOffsetX + (x - dragStartX);
+  offsetY = dragStartOffsetY + (y - dragStartY);
   clampOffsets();
   draw();
 };
+window.onmouseup = window.ontouchend = () => dragging = false;
 
-window.onmouseup = function() {
-  dragging = false;
-  canvas.style.cursor = 'grab';
+downloadBtn.onclick = () => {
+  const link = document.createElement('a');
+  link.download = 'BSU-74th-Frame.png';
+  link.href = canvas.toDataURL();
+  link.click();
 };
-
-// Touch events for mobile
-canvas.ontouchstart = function(e) {
-  if (!userImg) return;
-  e.preventDefault();
-  dragging = true;
-  const { canvasX, canvasY } = getCanvasCoords(e);
-  dragStartX = canvasX;
-  dragStartY = canvasY;
-  dragStartOffsetX = offsetX;
-  dragStartOffsetY = offsetY;
-};
-
-window.ontouchmove = function(e) {
-  if (!dragging || !userImg) return;
-  e.preventDefault();
-  const { canvasX, canvasY } = getCanvasCoords(e);
-  const dx = canvasX - dragStartX;
-  const dy = canvasY - dragStartY;
-  offsetX = dragStartOffsetX + dx;
-  offsetY = dragStartOffsetY + dy;
-  clampOffsets();
-  draw();
-};
-
-window.ontouchend = function() {
-  dragging = false;
-};
-
-// Set initial cursor style
-canvas.style.cursor = 'grab';
-
-// ========== DOWNLOAD ==========
-downloadBtn.onclick = function() {
-  // Ensure latest draw
-  draw();
-  // Small delay to ensure everything is rendered
-  setTimeout(() => {
-    try {
-      const link = document.createElement('a');
-      link.download = 'BSU-74th-frame.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch(err) {
-      alert("ডাউনলোড করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।");
-    }
-  }, 50);
-};
-
-// Initial draw (shows built-in frame or loading state)
 draw();
-
 </script>
-
 </body>
 </html>
