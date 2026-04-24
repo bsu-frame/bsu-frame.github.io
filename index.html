@@ -35,7 +35,7 @@ body{
 /* ==== NAVBAR ==== */
 .navbar{
   height:64px;
-  background:#1e3a8a;
+  background:#090054;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -60,14 +60,14 @@ body{
 
 /* ==== UPLOAD ==== */
 .upload{
-  border:2px dashed #1e3a8a;
+  border:2px dashed #090054;
   padding:20px;
   text-align:center;
   border-radius:10px;
   margin-bottom:10px;
   cursor:pointer;
   background:#fff;
-  color:#1e3a8a;
+  color:#090054;
   font-size:16px;
   transition:0.2s;
 }
@@ -80,7 +80,7 @@ canvas{
   width:100%;
   border-radius:10px;
   background:#e5e7eb;
-  border:2px solid #1e3a8a;
+  border:2px solid #090054;
   cursor:grab;
   touch-action:none;
   display:block;
@@ -103,12 +103,12 @@ canvas:active{
 input[type="range"]{
   flex:1;
   margin:0;
-  accent-color:#1e3a8a;
+  accent-color:#090054;
 }
 .zoom-value{
   font-size:14px;
   font-weight:bold;
-  color:#1e3a8a;
+  color:#090054;
   min-width:45px;
   text-align:center;
   background:#eef2ff;
@@ -121,7 +121,7 @@ button{
   width:100%;
   padding:12px;
   border:none;
-  background:#1e3a8a;
+  background:#090054;
   color:#fff;
   border-radius:8px;
   cursor:pointer;
@@ -146,7 +146,7 @@ button:hover{
 }
 .caption-title {
   font-weight: bold;
-  color: #1e3a8a;
+  color: #090054;
   margin-bottom: 10px;
   font-size: 15px;
   display: flex;
@@ -165,13 +165,13 @@ button:hover{
   color: #1e293b;
 }
 .copy-btn {
-  background: #1e3a8a;
+  background: #090054;
   margin-top: 0;
   padding: 10px;
   font-size: 14px;
 }
 .copy-btn:hover {
-  background: #1e3a8a;
+  background: #090054;
 }
 
 .frame-note{
@@ -273,7 +273,7 @@ https://bsu-frame.github.io</div>
         copyBtn.style.background = "#9a3626";
         setTimeout(() => {
           copyBtn.innerText = originalText;
-          copyBtn.style.background = "#1e3a8a";
+          copyBtn.style.background = "#090054";
         }, 2000);
       }).catch(err => {
         console.warn('Clipboard error:', err);
@@ -301,7 +301,7 @@ https://bsu-frame.github.io</div>
         copyBtn.style.background = "#9a3626";
         setTimeout(() => {
           copyBtn.innerText = originalText;
-          copyBtn.style.background = "#1e3a8a";
+          copyBtn.style.background = "#090054";
         }, 2000);
       } else {
         alert("কপি করতে ব্যর্থ হয়েছে। ম্যানুয়ালি কপি করুন।");
@@ -316,7 +316,7 @@ https://bsu-frame.github.io</div>
   function drawBuiltInFrame() {
     ctx.save();
     // Outer border
-    ctx.strokeStyle = '#1e3a8a';
+    ctx.strokeStyle = '#090054';
     ctx.lineWidth = 8;
     ctx.strokeRect(10, 10, canvasWidth - 20, canvasHeight - 20);
     ctx.strokeStyle = '#ffffff';
